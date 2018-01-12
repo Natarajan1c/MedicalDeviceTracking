@@ -1,0 +1,43 @@
+/**
+ * A model file to define "Regulator" participant, related assets & transactions
+ *
+ * Participant	: Regulator
+ * Asset		: Product
+ * Transaction	: IssueTrackingOrder
+ * Event		: (none)
+ *
+ *
+ * Author		: Natarajan Chandrasekhar
+ * Last Modified: 28/July/2017
+ */
+
+namespace composer.regulator
+
+import composer.manufacturer.Manufacturer
+
+enum RegulatorName {
+  o FDA
+}
+
+participant Regulator identified by RegId {
+  o String RegId default ='FDA'
+  o RegulatorName regulator default ='FDA'
+}
+
+enum TrackingRequired {
+ o YES
+ o NO
+}
+
+asset Product identified by productId {
+  o String productId
+  o String productDescription
+  o TrackingRequired tracking default ='YES'
+  --> Manufacturer manufacturer
+}
+
+transaction IssueTrackingOrder {
+  o String productId
+  o String productDescription
+  --> Manufacturer manufacturer
+}

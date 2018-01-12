@@ -1,0 +1,41 @@
+/**
+ * A model file to define "Distributor" participant related assets & transactions
+ * 
+ * Participant	: Distributor
+ * Asset		: (none)
+ * Transaction	: AcceptShipment, DistributeDevice
+ * Event		: DistributeDeviceEvent
+ *
+ * Author		: Natarajan Chandrasekhar
+ * Last Modified: 28/July/2017
+ */
+
+namespace composer.distributor
+
+import composer.base.ContactDetails
+import composer.manufacturer.MedicalDevice
+import composer.manufacturer.Manufacturer
+import composer.finaldistributor.FinalDistributor
+
+participant Distributor identified by DistId {
+  o String DistId
+  o String DistributorName
+  o ContactDetails contact optional
+  --> MedicalDevice [] incomingMedicalDevices optional
+ }
+
+transaction AcceptShipment {
+  --> MedicalDevice [] medicaldevice
+  --> Manufacturer sender
+  --> Distributor receiver
+}
+
+transaction DistributeDevice {
+  --> MedicalDevice medicaldevice
+  --> Distributor sender
+  --> FinalDistributor receiver
+}
+
+event DistributeDeviceEvent {
+  
+}

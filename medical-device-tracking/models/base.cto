@@ -1,0 +1,23 @@
+/**
+ * A model file to define concepts & abstract entities
+ * 
+ * Author		: Natarajan Chandrasekhar
+ * Last Modified: 28/July/2017
+ */
+
+namespace composer.base
+
+concept ContactDetails {
+  o String email  optional
+  o String telephone optional
+  o Address address optional
+}
+
+concept Address {
+  o String city optional
+  o String postalCode optional
+  o String country optional
+}
+
+transaction SetupDemo  {
+}

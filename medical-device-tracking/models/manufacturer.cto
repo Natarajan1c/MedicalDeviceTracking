@@ -1,0 +1,79 @@
+/**
+ * A model file to define "Manufacturer" participant, related assets & transactions
+ *
+ * Participant	: Manufacturer
+ * Asset		: MedicalDevice
+ * Transaction	: BatchManufactureDevices, ShipDevices
+ * Event		: ShipDevicesEvent
+ *
+ *
+ * Author		: Natarajan Chandrasekhar
+ * Last Modified: 28/July/2017
+ */
+
+
+namespace composer.manufacturer
+
+import composer.regulator.Product
+import composer.base.ContactDetails
+import composer.distributor.Distributor
+
+participant Manufacturer identified by ManufacturerId {
+  o String ManufacturerId
+  o String ManufactureName
+  o ContactDetails contact optional
+ }
+
+enum DeviceStatus {
+ o MANUFACTURED
+ o IN_TRANSIT
+ o WITH_DISTRIBUTOR
+ o IMPLANTED
+ o EXPLANTED
+ o RETURNED_TO_MANUFACTURER
+ o DESTROYED
+}
+
+enum DeviceCustodian {
+ o A_MANUFACTURER
+ o B_DISTRIBUTOR
+ o C_FINAL_DISTRIBUTOR
+ o D_PATIENT
+}
+
+asset MedicalDevice identified by UDI {
+  o String UDI
+  o String deviceName
+  o String batchNumber
+  o DeviceStatus status
+  o DeviceCustodian custodian
+  o String custodianId
+  o	String dofManufacture default = "dd/mmm/yyyy"
+  o	String dofExpiry default = "dd/mmm/yyyy"
+  o	String dofShipment optional
+  o	String dofImplant optional
+  o String Implantby optional
+  --> Product product
+  --> Manufacturer manufacturer
+}
+
+transaction BatchManufactureDevices {
+  o String [] UDI
+  o String deviceName
+  o String batchnumber
+  o String dofM default = "dd/mmm/yyyy"
+  o String dofE default = "dd/mmm/yyyy"
+  --> Manufacturer manufacturer
+  --> Product product
+  }
+
+transaction ShipDevices {
+  o String dofShipment default = "dd/mmm/yyyy"
+  --> MedicalDevice [] medicaldevice
+  --> Manufacturer sender
+  --> Distributor receiver
+}
+
+event ShipDevicesEvent {
+  
+}

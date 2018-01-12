@@ -1,0 +1,51 @@
+/**
+ * A model file to define "FinalDistributor" & "Patient" participant, related assets & transactions
+ *
+ * Participant	: FinalDistributor, Patient
+ * Asset		: (none)
+ * Transaction	: AcceptDeviceCustody, ImplantDevice
+ * Event		: DistributeDeviceEvent
+ *
+ * Author: Natarajan Chandrasekhar
+ * Last Modified: 28/July/2017
+ */
+
+namespace composer.finaldistributor
+
+import composer.base.ContactDetails
+import composer.manufacturer.MedicalDevice
+import composer.distributor.Distributor
+
+enum FinalDistType {
+ o LICENSED_PRACTIONOR
+ o HOSPITAL
+ o RETAIL_PHARMACY 
+}
+
+participant FinalDistributor identified by FinalDistId {
+  o String FinalDistId
+  o FinalDistType type default = "LICENSED_PRACTIONOR"
+  o String FinalDistributorName
+  o ContactDetails contact optional
+  --> MedicalDevice [] incomingMedicalDevices optional
+ }
+
+participant Patient identified by PatientId {
+  o String PatientId
+  o String PatientName
+  o ContactDetails contact optional
+}
+
+transaction AcceptDeviceCustody {
+  --> MedicalDevice medicaldevice
+  --> Distributor sender
+  --> FinalDistributor receiver
+}
+
+transaction ImplantDevice {
+  o String dofImplant default = "dd/mmm/yyyy"
+  o Boolean PatientInfoRelease
+  --> FinalDistributor implantby
+  --> Patient patient
+  --> MedicalDevice medicaldevice
+}
